@@ -9,9 +9,10 @@
     "verify-versions": "node -v && npm -v",
     "verify-permissions": "ls -l frontend/node_modules/.bin && ls -l frontend/node_modules/react-scripts/bin",
     "verify-frontend": "ls -la && ls -la frontend && if [ -z \"$(ls -A frontend)\" ]; then echo 'Frontend is empty, copying content'; cp -R ../frontend-backup/* frontend/; fi && ls -la frontend",
-    "install-all": "npm install && cd frontend && npm install",
-    "build-frontend": "cd frontend && npm install react-scripts && node ./node_modules/react-scripts/bin/react-scripts.js build",
-    "build": "npm run verify-versions && npm run verify-frontend && npm run install-all && npm run verify-permissions && npm run build-frontend",
+    "clean": "npm cache clean --force && cd frontend && npm cache clean --force",
+    "install-all": "npm ci && cd frontend && npm ci",
+    "build-frontend": "cd frontend && npm run build",
+    "build": "npm run clean && npm run verify-versions && npm run verify-frontend && npm run install-all && npm run verify-permissions && npm run build-frontend",
     "deploy": "npm run build && npm start",
     "dev:full": "concurrently \"npm run dev\" \"cd frontend && npm start\""
   },
