@@ -1,0 +1,166 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  background-color: #c6c6f3;
+  color: rgb(14, 148, 126);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Añade esta línea */
+}
+
+.app-logo {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.app-title {
+  text-align: center;
+  flex-grow: 1; 
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #aa7ee4;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li span {
+  font-weight: bold;
+}
+
+.sidebar ul ul {
+  margin-left: 20px;
+}
+
+.sidebar ul ul li {
+  cursor: pointer;
+}
+
+.sidebar ul ul li:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #aa7ee4;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Nuevos estilos para CrearPlanillaMensual */
+.error-message {
+  color: red;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px;
+  overflow: hidden;
+}
+
+.popup-header {
+  background-color: #aa7ee4;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.popup-content {
+  padding: 20px;
+}
+
+.select-container {
+  margin-bottom: 10px;
+}
+
+.select-input {
+  width: 100%;
+  margin-bottom: 20px;
+  height: 35px;
+  border-color: #E8E8E8;
+}
+
+.select-input:not(:disabled) {
+  color: black;
+}
+
+.select-input:disabled {
+  color: #808080;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #aa7ee4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.plomo-text {
+  color: #e4e4e4;  /* Color plomo */
+}
