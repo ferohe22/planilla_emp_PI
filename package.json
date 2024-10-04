@@ -6,10 +6,11 @@
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
+    "verify-versions": "node -v && npm -v",
     "verify-frontend": "ls -la && ls -la frontend && if [ -z \"$(ls -A frontend)\" ]; then echo 'Frontend is empty, copying content'; cp -R ../frontend-backup/* frontend/; fi && ls -la frontend",
     "install-all": "npm install && cd frontend && npm install",
-    "build-frontend": "cd frontend && npx react-scripts build",
-    "build": "npm run verify-frontend && npm run install-all && npm run build-frontend",
+    "build-frontend": "cd frontend && npm install react-scripts && npx --no-install react-scripts build",
+    "build": "npm run verify-versions && npm run verify-frontend && npm run install-all && npm run build-frontend",
     "deploy": "npm run build && npm start",
     "dev:full": "concurrently \"npm run dev\" \"cd frontend && npm start\""
   },
