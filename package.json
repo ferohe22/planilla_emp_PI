@@ -10,7 +10,7 @@
     "verify-permissions": "chmod -R 755 ./",
     "verify-frontend": "ls && [ -d frontend ] && echo 'Frontend exists' || (echo 'Frontend is empty, copying content' && cp -r ../frontend-backup frontend) && ls frontend",
     "clean": "npm cache clean --force && cd frontend && npm cache clean --force && cd ..",
-    "install-all": "npm ci && cd frontend && npm ci && cd ..",
+    "install-all": "npm install && cd frontend && npm install && cd ..",
     "build-frontend": "cd frontend && npm run build && cd ..",
     "build": "npm run clean && npm run verify-versions && npm run verify-frontend && npm run install-all && npm run verify-permissions && npm run build-frontend",
     "deploy": "npm run build && npm start",
@@ -24,8 +24,8 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "nodemon": "^3.1.0"
   },
   "proxy": "http://localhost:5000"
 }
