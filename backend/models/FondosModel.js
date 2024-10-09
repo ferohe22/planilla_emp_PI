@@ -5,8 +5,8 @@ const obtenerFondos = async () => {
 };
 
 const obtenerFondosPorId = async (id) => {
-  const Fondos = await obtenerFondos();
-  return Fondos.find(Fondos => Fondos.id === id);
+  const fondos = await obtenerFondos();
+  return fondos.find(fondo => fondo.id === id);
 };
 
 const crearFondos = async (datosFondos) => {
@@ -28,5 +28,3 @@ module.exports = {
   actualizarFondos,
   eliminarFondos
 };
-
-

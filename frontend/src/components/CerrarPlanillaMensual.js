@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function CrearPlanillaMensual() {
+function CerrarPlanillaMensual() {
   const [tiposPlanilla, setTiposPlanilla] = useState([]);
   const [selectedTipo, setSelectedTipo] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
@@ -55,7 +55,7 @@ function CrearPlanillaMensual() {
     };
   }, []);
 
-  const handleGenerar = async () => {
+  const handleCerrar = async () => {
     setIsProcessing(true);
     setShowPopup(false);
     setError(null);
@@ -71,21 +71,20 @@ function CrearPlanillaMensual() {
     console.log('Datos a enviar:', requestData);
 
     try {
-      const response = await axios.post('http://localhost:5001/api/planilla-mensual/crear', requestData);
+      const response = await axios.post('http://localhost:5001/api/planilla-mensual/cerrar', requestData);
       console.log('Respuesta del servidor:', response.data);
       setMessage(response.data.message);
       setResultInfo({
-        totalEmpleados: response.data.totalEmpleados,
-        totalRegistrosCreados: response.data.totalRegistrosCreados
+        totalRegistrosActualizados: response.data.totalRegistrosActualizados
       });
       setIsCompleted(true);
     } catch (error) {
-      console.error('Error al generar la planilla:', error);
+      console.error('Error al cerrar la planilla:', error);
       if (error.response) {
         console.error('Respuesta de error del servidor:', error.response.data);
-        setError(`Error al generar la planilla: ${error.response.data.message}`);
+        setError(`Error al cerrar la planilla: ${error.response.data.message}`);
       } else {
-        setError('Error al generar la planilla. Por favor, intente de nuevo más tarde.');
+        setError('Error al cerrar la planilla. Por favor, intente de nuevo más tarde.');
       }
     }
 
@@ -108,19 +107,19 @@ function CrearPlanillaMensual() {
 
   return (
     <div>
-      <h2>Generación de Planilla Mensual</h2>
+      <h2>Cierre de Planilla Mensual</h2>
 
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup">
-            <div className="popup-header">Seleccione los parametros de Planilla</div>
+            <div className="popup-header">Seleccione los parámetros de Planilla a Cerrar</div>
             <div className="popup-content">
               <div className="select-container">
                 <select 
                   value={selectedTipo} 
                   onChange={(e) => setSelectedTipo(e.target.value)}
                   className="select-input"
-                  style={{ color: selectedTipo === '' ? '#808080' : 'black' }}  // Color plomo si no se ha seleccionado
+                  style={{ color: selectedTipo === '' ? '#808080' : 'black' }}
                 >
                   <option value="" disabled>Seleccione tipo de planilla</option>
                   {tiposPlanilla.map(tipo => (
@@ -132,7 +131,7 @@ function CrearPlanillaMensual() {
                   value={selectedYear} 
                   onChange={(e) => setSelectedYear(e.target.value)}
                   className="select-input"
-                  style={{ color: selectedYear === '' ? '#808080' : 'black' }}  // Color plomo si no se ha seleccionado
+                  style={{ color: selectedYear === '' ? '#808080' : 'black' }}
                 >
                   <option value="" disabled>Seleccione año</option>
                   {years.map(year => (
@@ -144,7 +143,7 @@ function CrearPlanillaMensual() {
                   value={selectedMonth} 
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   className="select-input"
-                  style={{ color: selectedMonth === '' ? '#808080' : 'black' }}  // Color plomo si no se ha seleccionado
+                  style={{ color: selectedMonth === '' ? '#808080' : 'black' }}
                 >
                   <option value="" disabled>Seleccione mes</option>
                   {months.map((month, index) => (
@@ -154,11 +153,11 @@ function CrearPlanillaMensual() {
                 
               </div>
               <button 
-                onClick={handleGenerar} 
+                onClick={handleCerrar} 
                 disabled={!selectedTipo || !selectedYear || !selectedMonth}
                 className="submit-button"
               >
-                Enviar
+                Cerrar Planilla
               </button>
             </div>
           </div>
@@ -170,7 +169,7 @@ function CrearPlanillaMensual() {
           <div className="popup">
             <div className="popup-header">Procesando...</div>
             <div className="popup-content">
-              <p>Por favor espere mientras se genera la planilla.</p>
+              <p>Por favor espere mientras se cierra la planilla.</p>
             </div>
           </div>
         </div>
@@ -184,8 +183,7 @@ function CrearPlanillaMensual() {
               {message && <p>{message}</p>}
               {resultInfo && (
                 <div>
-                  <p>Total de empleados: {resultInfo.totalEmpleados}</p>
-                  <p>Registros de planilla creados: {resultInfo.totalRegistrosCreados}</p>
+                  <p>Registros de planilla actualizados: {resultInfo.totalRegistrosActualizados}</p>
                 </div>
               )}
               <p>Presione la tecla ESC para cerrar esta ventana.</p>
@@ -197,4 +195,4 @@ function CrearPlanillaMensual() {
   );
 }
 
-export default CrearPlanillaMensual;
+export default CerrarPlanillaMensual;

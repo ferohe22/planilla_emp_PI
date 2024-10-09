@@ -7,7 +7,9 @@ import FondoPensionTab from './components/FondoPensionTab';
 import CrearPlanillaMensual from './components/CrearPlanillaMensual';
 import ModificarPlanillaMensual from './components/ModificarPlanillaMensual';
 import EliminarPlanillaMensual from './components/EliminarPlanillaMensual';
+import CerrarPlanillaMensual from './components/CerrarPlanillaMensual';
 import CrearReportePlanillaMensual from './components/crearReportePlanillaMensual';
+import TipoPlanillaTab from './components/TipoPlanillaTab';
 
 function App() {
   const [selectedOption, setSelectedOption] = useState('');
@@ -26,8 +28,12 @@ function App() {
         return <ModificarPlanillaMensual />;
       case 'EliminarPlanillaMensual':
         return <EliminarPlanillaMensual />;
+      case 'CerrarPlanillaMensual':
+        return <CerrarPlanillaMensual />;
       case 'Listado de empleados':
         return <CrearReportePlanillaMensual />;
+      case 'Tipo de planilla':
+        return <TipoPlanillaTab />;
       default:
         return <div>Selecciona una opción del menú</div>;
     }

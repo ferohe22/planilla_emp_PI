@@ -1,24 +1,49 @@
 const airtableService = require('../services/airtableService');
 
 const obtenerEmpleados = async () => {
-  return await airtableService.obtenerRegistros(airtableService.tablaEmpleados);
+  try {
+    return await airtableService.obtenerRegistros('Empleados');
+  } catch (error) {
+    console.error('Error al obtener empleados:', error);
+    throw error;
+  }
 };
 
 const obtenerEmpleadoPorId = async (id) => {
-  const empleados = await obtenerEmpleados();
-  return empleados.find(empleado => empleado.id === id);
+  try {
+    const empleados = await obtenerEmpleados();
+    return empleados.find(empleado => empleado.id === id);
+  } catch (error) {
+    console.error('Error al obtener empleado por ID:', error);
+    throw error;
+  }
 };
 
 const crearEmpleado = async (datosEmpleado) => {
-  return await airtableService.crearRegistro(airtableService.tablaEmpleados, datosEmpleado);
+  try {
+    return await airtableService.crearRegistro('Empleados', datosEmpleado);
+  } catch (error) {
+    console.error('Error al crear empleado:', error);
+    throw error;
+  }
 };
 
 const actualizarEmpleado = async (id, datosEmpleado) => {
-  return await airtableService.actualizarRegistro(airtableService.tablaEmpleados, id, datosEmpleado);
+  try {
+    return await airtableService.actualizarRegistro('Empleados', id, datosEmpleado);
+  } catch (error) {
+    console.error('Error al actualizar empleado:', error);
+    throw error;
+  }
 };
 
 const eliminarEmpleado = async (id) => {
-  await airtableService.eliminarRegistro(airtableService.tablaEmpleados, id);
+  try {
+    await airtableService.eliminarRegistro('Empleados', id);
+  } catch (error) {
+    console.error('Error al eliminar empleado:', error);
+    throw error;
+  }
 };
 
 module.exports = {

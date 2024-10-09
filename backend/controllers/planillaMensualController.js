@@ -17,7 +17,7 @@ const planillaMensualController = {
             // Obtener todos los empleados
             let empleados;
             try {
-                empleados = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_EMPLEADOS);
+                empleados = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_EMPLEADOS);
 
                 if (empleados.length > 0) {
 
@@ -34,7 +34,7 @@ const planillaMensualController = {
             // Obtener todos los tipos de planilla
             let tiposPlanilla;
             try {
-                tiposPlanilla = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_TIPO_PLANILLA);
+                tiposPlanilla = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_TIPO_PLANILLA);
 
             } catch (error) {
                 console.error('Error al obtener tipos de planilla:', error);
@@ -60,7 +60,7 @@ const planillaMensualController = {
             // Obtener todos los salarios
             let salarios;
             try {
-                salarios = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_SALARIO_EMP);
+                salarios = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_SALARIO_EMP);
             } catch (error) {
                 console.error('Error al obtener salarios:', error);
                 return res.status(500).json({ message: "Error al obtener salarios", error: error.message });
@@ -69,7 +69,7 @@ const planillaMensualController = {
             // Obtener todos los fondos de pensión de empleados
             let fondoPensionEmpleados;
             try {
-                fondoPensionEmpleados = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_FONDO_EMP);
+                fondoPensionEmpleados = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_FONDO_EMP);
             } catch (error) {
                 console.error('Error al obtener fondos de pensión:', error);
                 return res.status(500).json({ message: "Error al obtener fondos de pensión", error: error.message });
@@ -78,7 +78,7 @@ const planillaMensualController = {
             // Obtener todos los fondos
             let fondos;
             try {
-                fondos = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_FONDOS);
+                fondos = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_FONDOS);
             } catch (error) {
                 console.error('Error al obtener fondos:', error);
                 return res.status(500).json({ message: "Error al obtener fondos", error: error.message });
@@ -87,7 +87,7 @@ const planillaMensualController = {
             // Obtener todos los aumentos
             let aumentos;
             try {
-                aumentos = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_AUMENTOS);
+                aumentos = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_AUMENTOS);
             } catch (error) {
                 console.error('Error al obtener aumentos:', error);
                 return res.status(500).json({ message: "Error al obtener aumentos", error: error.message });
@@ -113,7 +113,7 @@ const planillaMensualController = {
             // Obtener todos los aguinaldos
             let aguinaldos;
             try {
-                aguinaldos = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_AGUINALDO);
+                aguinaldos = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_AGUINALDO);
             } catch (error) {
                 console.error('Error al obtener aguinaldos:', error);
                 return res.status(500).json({ message: "Error al obtener aguinaldos", error: error.message });
@@ -122,7 +122,7 @@ const planillaMensualController = {
             // Detrminar suspension de renta
             let susp_renta;
             try {
-                susp_renta = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_SUSP_RENTA);
+                susp_renta = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_SUSP_RENTA);
             } catch (error) {
                 console.error('Error al obtener susp_renta:', error);
                 return res.status(500).json({ message: "Error al obtener susp_renta", error: error.message });
@@ -247,6 +247,7 @@ const planillaMensualController = {
                 const impuestoRenta = impuesto_Renta
                 const descuentos = dsctoFondo + dsctoComision + dsctoSeguro + impuestoRenta;
                 const remuneracion = ingresos + aguinaldo - descuentos;
+                const fechaHoraActual = new Date().toISOString();
 
                 const nuevoRegistro = {
                     año_planilla: añoNumerico,
@@ -265,6 +266,8 @@ const planillaMensualController = {
                     total_descuentos: descuentos,
                     neto_pagar: remuneracion,
                     impuesto_renta: impuestoRenta,
+                    date: fechaHoraActual,
+                    estado: "No Procesado"
                 };
 
                 try {
@@ -320,7 +323,7 @@ const planillaMensualController = {
             console.log('Filtro preparado:', filtro);
 
             console.log('Obteniendo registros de la planilla mensual');
-            const planillaMensual = await airtableService.getAllRecords(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, {
+            const planillaMensual = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, {
                 filterByFormula: filtro
             });
 
@@ -332,16 +335,20 @@ const planillaMensualController = {
             }
 
             console.log('Formateando datos de empleados');
+            const roundToTwoDecimals = (num) => {
+                return Math.round((num + Number.EPSILON) * 100) / 100;
+            };
+
             const empleados = planillaMensual.map(registro => {
                 console.log('Procesando registro:', registro.id);
                 return {
                     nombres: registro.nom_emp,
                     apellidos: registro.apell_emp,
                     id_tip_planilla: registro.id_tip_planilla,
-                    salario: registro.salario_bruto,
-                    totalIngreso: registro.total_ingresos,
-                    totalDescuento: registro.total_descuentos,
-                    netoAPagar: registro.neto_pagar
+                    salario: roundToTwoDecimals(registro.salario_bruto),
+                    totalIngreso: roundToTwoDecimals(registro.total_ingresos),
+                    totalDescuento: roundToTwoDecimals(registro.total_descuentos),
+                    netoAPagar: roundToTwoDecimals(registro.neto_pagar)
                 };
             });
 
@@ -362,7 +369,81 @@ const planillaMensualController = {
             console.error('Error al generar el reporte de empleados:', error);
             res.status(500).json({ message: "Error al generar el reporte de empleados", error: error.message });
         }
-    }
+    },
+
+    EliminarPlanillaMensual: async (req, res) => {
+        try {
+            const { tipo, anio, mes } = req.body;
+            const anioNumerico = parseInt(anio, 10);
+            const mesNumerico = parseInt(mes, 10);
+            const idTipoNumerico = parseInt(tipo, 10);
+
+            if (!idTipoNumerico || isNaN(anioNumerico) || isNaN(mesNumerico)) {
+                return res.status(400).json({ message: 'Todos los campos son requeridos y deben ser válidos' });
+            }
+
+            const filtro = `AND({año_planilla} = ${anioNumerico}, {mes_planilla} = ${mesNumerico}, {id_tip_planilla} = ${idTipoNumerico}, {estado} = "No Procesado")`;
+
+            const planillasAEliminar = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, {
+                filterByFormula: filtro
+            });
+
+            if (planillasAEliminar.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron planillas para eliminar con los parámetros proporcionados' });
+            }
+
+            const idsAEliminar = planillasAEliminar.map(planilla => planilla.id);
+            await airtableService.eliminarRegistros(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, idsAEliminar);
+
+            res.json({ message: `Se eliminaron ${idsAEliminar.length} planillas con éxito` });
+        } catch (error) {
+            console.error('Error al eliminar la planilla:', error);
+            res.status(500).json({ message: 'Error al eliminar la planilla', error: error.message });
+        }
+    },
+
+    CerrarPlanillaMensual: async (req, res) => {
+        try {
+            const { año, mes, ID_tipo } = req.body;
+            const añoNumerico = parseInt(año, 10);
+            const mesNumerico = parseInt(mes, 10);
+            const idTipoNumerico = parseInt(ID_tipo, 10);
+    
+            if (!idTipoNumerico || isNaN(añoNumerico) || isNaN(mesNumerico)) {
+                return res.status(400).json({ message: 'Todos los campos son requeridos y deben ser válidos' });
+            }
+    
+            const filtro = `AND({año_planilla} = ${añoNumerico}, {mes_planilla} = ${mesNumerico}, {id_tip_planilla} = ${idTipoNumerico}, {estado} != "Procesado")`;
+    
+            const planillasACerrar = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, {
+                filterByFormula: filtro
+            });
+    
+            if (planillasACerrar.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron planillas para cerrar con los parámetros proporcionados' });
+            }
+    
+            let actualizacionesExitosas = 0;
+    
+            for (const planilla of planillasACerrar) {
+                try {
+                    await airtableService.actualizarRegistro(process.env.AIRTABLE_TABLE_NAME_PLAN_MENSUAL, planilla.id, { estado: "Procesado" });
+                    actualizacionesExitosas++;
+                } catch (error) {
+                    console.error(`Error al actualizar la planilla ${planilla.id}:`, error);
+                }
+            }
+    
+            res.json({ 
+                message: "Planillas cerradas con éxito", 
+                totalRegistrosActualizados: actualizacionesExitosas 
+            });
+        } catch (error) {
+            console.error('Error al cerrar la planilla:', error);
+            res.status(500).json({ message: 'Error al cerrar la planilla', error: error.message });
+        }
+    },
+
 };
 
 module.exports = planillaMensualController;

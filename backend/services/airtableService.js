@@ -109,9 +109,34 @@ const eliminarRegistro = async (tableName, id) => {
   }
 };
 
+const eliminarRegistros = async (tableName, ids) => {
+  console.log(`Eliminando ${ids.length} registros de la tabla ${tableName}...`);
+  try {
+    // Airtable permite eliminar hasta 10 registros a la vez
+    const chunks = [];
+    for (let i = 0; i < ids.length; i += 10) {
+      chunks.push(ids.slice(i, i + 10));
+    }
+
+    for (const chunk of chunks) {
+      await base(tableName).destroy(chunk);
+    }
+
+    console.log(`${ids.length} registros eliminados exitosamente de la tabla ${tableName}`);
+  } catch (error) {
+    console.error(`Error al eliminar registros de ${tableName}:`, error);
+    console.error('Detalles del error:', JSON.stringify(error, null, 2));
+    throw error;
+  }
+};
+
 module.exports = {
-  getAllRecords,
+  obtenerRegistros: getAllRecords,
+  getAllRecords,  // Mantén esta línea si aún necesitas usar getAllRecords en algún lugar
   crearRegistro,
   actualizarRegistro,
-  eliminarRegistro
+  eliminarRegistro,
+  eliminarRegistros,  // Añade esta línea
+  tablaFondos: process.env.AIRTABLE_TABLE_NAME_FONDOS,
+  tablaBasico: process.env.AIRTABLE_TABLE_NAME_BASICO  // Agregamos esta línea
 };

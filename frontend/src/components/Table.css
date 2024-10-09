@@ -3,11 +3,22 @@
   overflow-x: auto;
 }
 
+.table-wrapper {
+  display: inline-block;
+  max-width: 100%;
+}
+
 .resizable-table {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
   table-layout: fixed;
+}
+
+.adaptive-table {
+  width: auto;
+  min-width: 50%;
+  max-width: 100%;
 }
 
 .resizable-table th,
@@ -19,6 +30,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.adaptive-table th,
+.adaptive-table td {
+  min-width: 100px;
+  max-width: 300px;
 }
 
 .resizable-table th {

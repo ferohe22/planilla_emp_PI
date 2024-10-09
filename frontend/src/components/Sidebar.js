@@ -25,9 +25,9 @@ function Sidebar({ setSelectedOption }) {
                 </span>
                 {planillaMensualExpanded && (
                   <ul>
-                    <li onClick={() => setSelectedOption('CrearPlanillaMensual')}>Crear</li>
-                    <li onClick={() => setSelectedOption('ModificarPlanillaMensual')}>Modificar</li>
-                    <li onClick={() => setSelectedOption('EliminarPlanillaMensual')}>Eliminar</li>
+                    <li onClick={() => setSelectedOption('CrearPlanillaMensual')}>Crear Planilla Mensual</li>
+                    <li onClick={() => setSelectedOption('CerrarPlanillaMensual')}>Cerrar Planilla Mensual</li>
+                    <li onClick={() => setSelectedOption('EliminarPlanillaMensual')}>Eliminar Planilla Mensual</li>
                   </ul>
                 )}
               </li>
@@ -41,7 +41,7 @@ function Sidebar({ setSelectedOption }) {
           </span>
           {reportesExpanded && (
             <ul>
-              <li onClick={() => setSelectedOption('Listado de empleados')}>Listado de empleados</li>
+              <li onClick={() => setSelectedOption('Listado de empleados')}>Reporte por tipo de planilla</li>
               <li onClick={() => setSelectedOption('Listado de empleados por AFP')}>Listado de empleados por AFP</li>
             </ul>
           )}

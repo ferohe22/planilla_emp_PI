@@ -42,6 +42,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// Ruta solicitada antes de definir las rutas de API
+app.use((req, res, next) => {
+  console.log(`Ruta solicitada: ${req.path}`);
+  next();
+});
+
 // Rutas de API
 console.log('Registrando rutas de API...');
 app.use('/api/empleados', rutasEmpleados);
@@ -51,17 +57,20 @@ app.use('/api/tipos-planilla', rutasTiposPlanilla);
 app.use('/api/planilla-mensual', rutasPlanillaMensual);
 console.log('Rutas de API registradas');
 
-// Servir archivos estáticos del frontend en producción
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+// Servir archivos estáticos del frontend en producción y desarrollo
+console.log('Sirviendo archivos estáticos');
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 
-  // Ruta para manejar todas las demás solicitudes y servir index.html
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
-  });
-}
+// Ruta para manejar todas las demás solicitudes y servir index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+});
 
 // Middleware de manejo de errores
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
+
 app.use(middlewareError);
 
 const server = app.listen(PUERTO, () => {

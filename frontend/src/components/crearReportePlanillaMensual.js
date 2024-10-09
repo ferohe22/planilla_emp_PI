@@ -29,7 +29,10 @@ function CrearReportePlanillaMensual() {
       try {
         const response = await axios.get('http://localhost:5001/api/tipos-planilla');
         console.log('Tipos de planilla cargados:', response.data);
-        setTiposPlanilla(response.data);
+        // Ordenar los tipos de planilla por ID_tipo
+        const tiposOrdenados = response.data.sort((a, b) => a.ID_tipo - b.ID_tipo);
+        setTiposPlanilla(tiposOrdenados);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error al cargar tipos de planilla:', error);
         setError('Error al cargar tipos de planilla. Por favor, intente de nuevo más tarde.');
@@ -62,6 +65,9 @@ function CrearReportePlanillaMensual() {
       const response = await axios.post('http://localhost:5001/api/planilla-mensual/reporte', requestData);
       console.log('Respuesta del servidor recibida:', response.data);
       
+      // Agregar este log para verificar los datos recibidos
+      console.log('Datos de empleados recibidos:', JSON.stringify(response.data.empleados, null, 2));
+
       if (response.data && response.data.empleados) {
         console.log('Número de empleados en el reporte:', response.data.empleados.length);
       } else {
@@ -89,6 +95,14 @@ function CrearReportePlanillaMensual() {
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parseFloat(value).toFixed(2));
+  };
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -177,10 +191,10 @@ function CrearReportePlanillaMensual() {
                 <tr key={index}>
                   <td>{empleado.nombres}</td>
                   <td>{empleado.apellidos}</td>
-                  <td>{empleado.salario}</td>
-                  <td>{empleado.totalIngreso}</td>
-                  <td>{empleado.totalDescuento}</td>
-                  <td>{empleado.netoAPagar}</td>
+                  <td>{formatCurrency(empleado.salario)}</td>
+                  <td>{formatCurrency(empleado.totalIngreso)}</td>
+                  <td>{formatCurrency(empleado.totalDescuento)}</td>
+                  <td>{formatCurrency(empleado.netoAPagar)}</td>
                 </tr>
               ))}
             </tbody>

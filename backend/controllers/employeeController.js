@@ -1,12 +1,13 @@
 const employeeModel = require('../models/employeeModel');
+const airtableService = require('../services/airtableService');
 
 const obtenerEmpleados = async (req, res, next) => {
   try {
-    const empleados = await employeeModel.obtenerEmpleados();
+    const empleados = await airtableService.obtenerRegistros(process.env.AIRTABLE_TABLE_NAME_EMPLEADOS);
     res.json(empleados);
   } catch (error) {
     console.error('Error al obtener empleados:', error);
-    next(error);
+    res.status(500).json({ message: 'Error al obtener empleados', error: error.message });
   }
 };
 

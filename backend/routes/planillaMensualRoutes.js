@@ -10,7 +10,14 @@ router.post('/crear', (req, res, next) => {
     console.log('Solicitud POST recibida en /crear');
     //console.log('Cuerpo de la solicitud:', req.body);
     next();
-}, planillaMensualController.crearPlanillaMensual);
+}, async (req, res) => {
+    try {
+        await planillaMensualController.crearPlanillaMensual(req, res);
+    } catch (error) {
+        console.error('Error al crear planilla mensual:', error);
+        res.status(500).json({ message: 'Error interno del servidor al crear planilla mensual' });
+    }
+});
 
 // Nueva ruta para generar el reporte de empleados
 router.post('/reporte', (req, res, next) => {
@@ -21,7 +28,25 @@ router.post('/reporte', (req, res, next) => {
 
 router.get('/test', (req, res) => {
     console.log('Ruta de prueba accedida');
-    res.json({ message: 'Ruta de prueba funcionando' });
+    res.json({ 
+        message: 'Ruta de prueba funcionando',
+        timestamp: new Date().toISOString(),
+        route: '/api/planilla-mensual/test'
+    });
 });
-  
+
+// Nueva ruta para eliminar planilla mensual
+router.delete('/eliminar', (req, res, next) => {
+    console.log('Solicitud DELETE recibida en /eliminar');
+    console.log('Cuerpo de la solicitud:', req.body);
+    next();
+}, planillaMensualController.EliminarPlanillaMensual);
+
+// Nueva ruta para cerrar planilla mensual
+router.post('/cerrar', (req, res, next) => {
+    console.log('Solicitud POST recibida en /cerrar');
+    console.log('Cuerpo de la solicitud:', req.body);
+    next();
+}, planillaMensualController.CerrarPlanillaMensual);
+
 module.exports = router;
